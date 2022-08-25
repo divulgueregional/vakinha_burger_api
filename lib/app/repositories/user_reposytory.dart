@@ -6,14 +6,15 @@ import 'package:vakinha_burger_api/app/core/helpers/cripty_helper.dart';
 import 'package:vakinha_burger_api/app/entities/user.dart';
 
 class UserReposytory {
+  //método de login
   Future<User> login(String email, String password) async {
     MySqlConnection? conn;
     try {
       conn = await Database().openConnection();
       final result = await conn.query(''' 
-        select from z_usuario
-        where email = ?
-        and senha = ?
+        select * from z_usuario 
+        where email = ? 
+        and senha = ? 
          ''', [email, CriptyHelper.generatedSha256Hash(password)]);
 
       if (result.isEmpty) {
@@ -23,6 +24,7 @@ class UserReposytory {
       //encontrou
       final userData = result.first;
 
+      //o que vai retornar
       return User(
         id: userData['id'],
         name: userData['nome'],
@@ -38,6 +40,7 @@ class UserReposytory {
     }
   }
 
+  //método de inclusão
   Future<void> save(User user) async {
     MySqlConnection? conn;
     try {
